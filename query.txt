@@ -1,0 +1,76 @@
+SELECT R.RefNumber,DATEDIFF(day, R.DateIn, convert(date, GETDATE())) as Aging,
+R.ESN,R.MSN,R.Status,R.DateIn,R.DateDockOut,
+R.DateEstimation,R.DateApproved,R.DateReject,R.PurchaseDate,R.Mot_Tran,
+R.Warranty,R.Manufacturer,R.ManufacturerOTC,R.MftrMSN,R.FuturetelMSN,R.FutureTelOTC,
+R.WorkCode1,R.WorkCode2,R.WorkCode3,R.Problem1,R.Problem2,R.Problem3,
+R.Complaint1,R.Complaint2,R.Complaint3,M.ProductCode,
+P.Qty,P.PartNumber,P.FaultCode
+FROM EasyDB.dbo.tblRepair R
+LEFT JOIN easydb.dbo.tblRepairParts P
+ON R.RefNumber = P.RefNumber
+LEFT JOIN EasyDB.dbo.tblModel M
+ON R.ModelNumber = M.ModelNumber
+where R.Manufacturer = 'CAT' 
+And R.DateDockOut is null
+And R.Status != 'X'
+And R.FuturetelLocation != 'CATL_CUST'
+order by R.RefNumber
+
+
+
+
+SELECT R.RefNumber,DATEDIFF(day, R.DateIn, convert(date, GETDATE())) as Aging,
+R.ESN,R.MSN,R.Status,R.DateIn,R.DateDockOut,R.DateComplete,
+R.DateEstimation,R.DateApproved,R.DateReject,R.PurchaseDate,R.Mot_Tran,
+R.Warranty,R.Manufacturer,R.ManufacturerOTC,R.MftrMSN,R.FuturetelMSN,R.FutureTelOTC,
+R.WorkCode1,R.WorkCode2,R.WorkCode3,R.Problem1,R.Problem2,R.Problem3,
+R.Complaint1,R.Complaint2,R.Complaint3,M.ProductCode,
+P.Qty,P.PartNumber,P.FaultCode
+FROM EasyDB.dbo.tblRepair R
+LEFT JOIN easydb.dbo.tblRepairParts P
+ON R.RefNumber = P.RefNumber
+LEFT JOIN EasyDB.dbo.tblModel M
+ON R.ModelNumber = M.ModelNumber
+where R.Manufacturer = 'CAT' 
+And R.DateDockOut is null
+And R.Status != 'X'
+And (R.DateComplete >= (Format(GetDate(), N'yyyy-MM-dd')+' 07:00:00') or R.DateComplete is null)
+And R.FuturetelLocation != 'CATL_CUST'
+order by R.RefNumber
+
+
+
+
+
+
+
+
+
+
+SELECT R.RefNumber,DATEDIFF(day, R.DateIn, convert(date, GETDATE())) as Aging,
+R.ESN,R.MSN,R.Status,R.DateIn,R.DateDockOut,R.DateComplete,
+R.DateEstimation,R.DateApproved,R.DateReject,R.PurchaseDate,R.Mot_Tran,
+R.Warranty,R.Manufacturer,R.ManufacturerOTC,R.MftrMSN,R.FuturetelMSN,R.FutureTelOTC,
+R.WorkCode1,R.WorkCode2,R.WorkCode3,R.Problem1,R.Problem2,R.Problem3,
+R.Complaint1,R.Complaint2,R.Complaint3,M.ProductCode,
+P.Qty,P.PartNumber,P.FaultCode
+FROM EasyDB.dbo.tblRepair R
+LEFT JOIN easydb.dbo.tblRepairParts P
+ON R.RefNumber = P.RefNumber
+LEFT JOIN EasyDB.dbo.tblModel M
+ON R.ModelNumber = M.ModelNumber
+where R.Manufacturer = 'CAT' 
+And R.DateDockOut is null
+And (R.Status = 'R' or R.Status != 'X')
+And (R.DateComplete >= (Format(GetDate(), N'yyyy-MM-dd')+' 07:00:00') or R.DateComplete is null)
+And R.FuturetelLocation != 'CATL_CUST'
+AND R.RefNumber in 
+( select R.RefNumber
+FROM EasyDB.dbo.tblRepair R
+LEFT JOIN easydb.dbo.tblRepairParts P
+ON R.RefNumber = P.RefNumber
+LEFT JOIN EasyDB.dbo.tblModel M
+ON R.ModelNumber = M.ModelNumber
+group by R.RefNumber
+Having COUNT(*)=1)
+order by R.RefNumber
