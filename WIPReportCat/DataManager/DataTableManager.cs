@@ -79,7 +79,7 @@ namespace WIPReportCat.DataManager
             WorkSheet.Columns.AutoFit();
             //set columns format to text format
             WorkSheet.Columns.NumberFormat = "@";
-            WorkSheet.get_Range("A1", "D1").NumberFormat = "";
+
             //set column headers' font to bold
             //WorkSheet.get_Range("A1", lastColumnName + "1").Font.Bold = true;
             #endregion
